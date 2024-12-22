@@ -7,10 +7,13 @@
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
-    "elysia": "latest"
+    "drizzle-orm": "^0.38.2",
+    "elysia": "latest",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "drizzle-kit": "^0.30.1"
   },
   "module": "src/index.js"
 }
