@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { treaty } from "@elysiajs/eden";
-import type { App } from "@rei/backend";
-
-const client = treaty<App>("localhost:3000");
+// import { client } from "../services/api";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
