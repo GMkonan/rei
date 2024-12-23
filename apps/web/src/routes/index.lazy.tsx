@@ -1,43 +1,28 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-// import { client } from "../services/api";
+import { client } from "../services/api";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
-// typesafe react-query fetch with elysia (search)
-
-type Feed = {
-  title: string;
-  description: string;
-};
-
 function Index() {
   const [input, setInput] = useState("");
-  const [feeds, setFeeds] = useState([]);
+
+  const { data: feedData } = useQuery({
+    queryKey: ["feedQuery"],
+    // make this in other function to use other eden retuns that are not only data
+    queryFn: async () => (await client.feeds.get()).data,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("submitting", input);
 
     try {
-      const res = await fetch("http://localhost:3000/new-feed", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: input }),
-      });
-
-      if (res.ok) {
-        console.log("feed added");
-        console.log(res);
-        const data = await res.json();
-        setFeeds([...feeds, data.feed]);
-      } else {
-        console.error("error adding feed");
-      }
+      const res = await client["new-feed"].post({ url: input });
+      console.log(res.status);
     } catch (err) {
       console.error(err);
     }
@@ -65,7 +50,7 @@ function Index() {
         </form>
       </div>
       <div className="mt-4">
-        {feeds.map((feed: Feed) => (
+        {feedData?.map((feed) => (
           <div
             className="flex flex-col border border-black p-4 items-start"
             key={feed.title}

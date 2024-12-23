@@ -1,8 +1,8 @@
 {
   "name": "rei",
- "private": true,
+  "private": true,
   "workspaces": [
     "packages/*",
     "apps/*"
-  ] 
+  ]
 }
