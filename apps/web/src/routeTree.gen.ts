@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as FeedAuthorIdImport } from './routes/feed/$authorId'
 
 // Create Virtual Routes
 
@@ -26,6 +27,12 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const FeedAuthorIdRoute = FeedAuthorIdImport.update({
+  id: '/feed/$authorId',
+  path: '/feed/$authorId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -37,6 +44,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/feed/$authorId': {
+      id: '/feed/$authorId'
+      path: '/feed/$authorId'
+      fullPath: '/feed/$authorId'
+      preLoaderRoute: typeof FeedAuthorIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -44,32 +58,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/feed/$authorId': typeof FeedAuthorIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/feed/$authorId': typeof FeedAuthorIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/feed/$authorId': typeof FeedAuthorIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/feed/$authorId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/feed/$authorId'
+  id: '__root__' | '/' | '/feed/$authorId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  FeedAuthorIdRoute: typeof FeedAuthorIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  FeedAuthorIdRoute: FeedAuthorIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -82,11 +101,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/feed/$authorId"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/feed/$authorId": {
+      "filePath": "feed/$authorId.tsx"
     }
   }
 }
