@@ -1,9 +1,15 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { treaty } from "@elysiajs/eden";
+import type { App } from "@rei/backend";
+
+const client = treaty<App>("localhost:3000");
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
+
+// typesafe react-query fetch with elysia (search)
 
 type Feed = {
   title: string;
@@ -19,7 +25,7 @@ function Index() {
     console.log("submitting", input);
 
     try {
-      const res = await fetch("http://localhost:3000/feeds", {
+      const res = await fetch("http://localhost:3000/new-feed", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
