@@ -1,0 +1,12 @@
+{
+  "remote.restoreForwardedPorts": true,
+  "remote.autoForwardPorts": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
+}
