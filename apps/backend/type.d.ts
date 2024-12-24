@@ -1,19 +1,19 @@
 type FeedDetails = {
-    title: string;
-    description: string;
-    author: string;
-    link: string;
-}
+	title: string;
+	description: string;
+	author: string;
+	link: string;
+};
 
 type Post = {
-    title: string;
-    link: string;
-    pubDate: string;
-    content: string;
-}
+	title: string;
+	link: string;
+	pubDate: string;
+	content: string;
+};
 
 type Feed = {
-    status: string,
-    feed: FeedDetails,
-    items: Post[]
-}
+	status: string;
+	feed: FeedDetails;
+	items: Post[];
+};
