@@ -4,14 +4,13 @@ import { feeds } from "../db/schema";
 
 export async function AddFeed(newFeed: FeedDetails) {
 	console.log(newFeed);
-	const newa = await db
-		.insert(feeds)
-		.values({
-			title: newFeed.title,
-			description: newFeed.description,
-			author: newFeed.author,
-			link: newFeed.link,
-		});
+	const addedFeed = await db.insert(feeds).values({
+		title: newFeed.title,
+		description: newFeed.description,
+		author: newFeed.author,
+		link: newFeed.link,
+		rss: newFeed.url,
+	});
 }
 
 export async function GetFeeds() {

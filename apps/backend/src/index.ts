@@ -3,20 +3,22 @@ import { cors } from "@elysiajs/cors";
 import { GetFeeds, AddFeed, GetFeedsWithNotifOn } from "./handlers/feeds";
 import cron from "@elysiajs/cron";
 import swagger from "@elysiajs/swagger";
-import findNewPosts from "./utils/findNewPosts";
+import findNewPosts from "./utils/findNewPostsTable";
+import fetchRss from "./utils/fetchRss";
+import fetchNewPosts from "./utils/fetchNewPosts";
+import { AddPosts, GetLastPost } from "./handlers/posts";
 
 const app = new Elysia()
 	.use(cors())
 	.use(swagger())
 	.get("/api", () => "Hello Elysia")
 	.post("/new-feed", async (req) => {
-		// console.log(req.body);
-		const baseUrl = "https://api.rss2json.com/v1/api.json?rss_url=";
-		const url = `${baseUrl}${(req.body as { url: string }).url}`;
-		const res = await fetch(url);
-		const data = (await res.json()) as Feed;
+		// should check first in db so we don't add the same feed twice
+
+		const data = await fetchRss(req.body.url);
 		AddFeed(data.feed);
-		// Initial fetch of posts to enter db
+		// Initial fetch of current posts to enter db
+		AddPosts(data);
 		return { status: "success", feed: data.feed };
 	})
 	.get("/feeds", async () => {
@@ -25,25 +27,47 @@ const app = new Elysia()
 	})
 	.use(
 		cron({
-			name: "fetcher",
-			pattern: "0 */2 * * *", // every 2 hours
+			name: "update_posts",
+			pattern: "* */2 * * *", // every 2 hours
 			async run() {
-				console.log("Running");
-
+				console.log("Running fetcher cron");
 				// check if there are new posts on all feeds and update accordinly
+
+				const feeds = await GetFeeds();
+
+				for (const feed of feeds) {
+					// fetch rss post
+					const lastRssPost = await fetchRss(feed.rss);
+
+					const lastDbPost = await GetLastPost(feed.id);
+					console.log("Last DB post: ", lastDbPost.pubDate);
+					console.log("Last RSS post: ", lastRssPost.items[0].pubDate);
+					if (
+						new Date(lastRssPost.items[0].pubDate).getTime() >
+						new Date(lastDbPost.pubDate).getTime()
+					) {
+						// add to db
+						AddPosts(lastRssPost);
+					}
+				}
 			},
 		}),
 	)
 	.use(
 		cron({
-			name: "mailer",
-			pattern: "0 0 * * *",
+			name: "new_posts_mailer",
+			pattern: "0 0 * * *", // every day
 			async run() {
 				console.log("Running");
 
 				// get list of feeds
 				const feeds = await GetFeedsWithNotifOn();
 				// traverse it to see if there are new items to any of them
+				// check for table with posts that have been sent before (and timestamp)
+				// timestamp is required to check so we dont send emails of posts older
+				// than the time this feed was added to the db
+
+				// so we can be sure that email only contains the newest posts ( a "new" tag could also benefit from this)
 				const newPosts = findNewPosts(feeds);
 				// if there are, send an email to the user defined (where can we define user? maybe env for now)
 			},

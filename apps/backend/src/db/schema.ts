@@ -21,7 +21,9 @@ export const feeds = pgTable("feeds", {
 	description: varchar("description", { length: 255 }),
 	author: varchar("author", { length: 255 }),
 	link: varchar("link", { length: 255 }),
+	rss: varchar("rss", { length: 255 }).notNull(),
 	notifications: boolean("notifications"),
+	createdAt: date("createdAt").notNull().default("now()"),
 });
 
 export const feedsRelations = relations(feeds, ({ many }) => ({
@@ -32,17 +34,27 @@ export const posts = pgTable("posts", {
 	id: serial("id").primaryKey(),
 	feedId: integer("feedId"),
 	title: varchar("title", { length: 255 }),
-	description: varchar("description", { length: 255 }),
+	description: text("description"),
 	author: varchar("author", { length: 255 }),
-	// put as postgres date type (or timestamp)
-	pubDate: date("pubDate"),
+	pubDate: date("pubDate").notNull(),
+	createdAt: date("createdAt").notNull().default("now()"),
 	content: text("content"),
+});
+
+export const sentPosts = pgTable("sent_posts", {
+	id: serial("id").primaryKey(),
+	postId: integer("postId"),
+	// userId: integer("userId"),
 });
 
 export const postsRelations = relations(posts, ({ one }) => ({
 	author: one(feeds, {
 		fields: [posts.feedId],
 		references: [feeds.id],
+	}),
+	sent: one(sentPosts, {
+		fields: [posts.id],
+		references: [sentPosts.postId],
 	}),
 }));
 
