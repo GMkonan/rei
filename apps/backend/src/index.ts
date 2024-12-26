@@ -3,9 +3,7 @@ import { cors } from "@elysiajs/cors";
 import { GetFeeds, AddFeed, GetFeedsWithNotifOn } from "./handlers/feeds";
 import cron from "@elysiajs/cron";
 import swagger from "@elysiajs/swagger";
-import findNewPosts from "./utils/findNewPostsTable";
 import fetchRss from "./utils/fetchRss";
-import fetchNewPosts from "./utils/fetchNewPosts";
 import {
 	AddPosts,
 	GetLastPost,
@@ -90,10 +88,6 @@ const app = new Elysia()
 						console.log(feed.createdAt);
 					}
 				}
-
-				// so we can be sure that email only contains the newest posts ( a "new" tag could also benefit from this)
-				const newPosts = findNewPosts(feeds);
-				// if there are, send an email to the user defined (where can we define user? maybe env for now)
 			},
 		}),
 	)
