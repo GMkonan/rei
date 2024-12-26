@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import db from "../config/db";
-import { posts } from "../db/schema";
+import { posts, sentPosts } from "../db/schema";
 
 export async function GetPosts() {
 	return await db.select().from(posts).execute();
@@ -26,4 +26,30 @@ export async function AddPosts(data: Feed) {
 		feedId: data.feed.id,
 	}));
 	const addedPosts = await db.insert(posts).values(postsToAdd);
+}
+
+export async function GetPostById(id: number) {
+	return await db
+		.select()
+		.from(posts)
+		.where(eq(posts.id, id))
+		.execute()
+		.then((post) => post[0]);
+}
+
+export async function GetSentPosts() {
+	return await db.select().from(sentPosts).execute();
+}
+
+export async function IsPostOnSentPosts(postId: number) {
+	return await db
+		.select()
+		.from(sentPosts)
+		.where(eq(sentPosts.postId, postId))
+		.execute();
+}
+
+export async function MarkPostAsSent(postId: number) {
+	// Add to sent_posts table
+	return await db.insert(sentPosts).values({ postId });
 }

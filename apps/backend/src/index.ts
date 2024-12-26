@@ -6,7 +6,12 @@ import swagger from "@elysiajs/swagger";
 import findNewPosts from "./utils/findNewPostsTable";
 import fetchRss from "./utils/fetchRss";
 import fetchNewPosts from "./utils/fetchNewPosts";
-import { AddPosts, GetLastPost } from "./handlers/posts";
+import {
+	AddPosts,
+	GetLastPost,
+	IsPostOnSentPosts,
+	MarkPostAsSent,
+} from "./handlers/posts";
 
 const app = new Elysia()
 	.use(cors())
@@ -56,7 +61,7 @@ const app = new Elysia()
 	.use(
 		cron({
 			name: "new_posts_mailer",
-			pattern: "0 0 * * *", // every day
+			pattern: "* * * * *", // every day
 			async run() {
 				console.log("Running");
 
@@ -64,8 +69,27 @@ const app = new Elysia()
 				const feeds = await GetFeedsWithNotifOn();
 				// traverse it to see if there are new items to any of them
 				// check for table with posts that have been sent before (and timestamp)
-				// timestamp is required to check so we dont send emails of posts older
-				// than the time this feed was added to the db
+
+				for (const feed of feeds) {
+					// fetch rss post
+
+					// support more than one post in the future
+					const lastDbPost = await GetLastPost(feed.id);
+
+					// check if post was published after the feed was added to the db
+					if (lastDbPost.pubDate > feed.createdAt) {
+						// check if it's on the list of sent before
+						if (await IsPostOnSentPosts(lastDbPost.id)) {
+							return;
+						}
+
+						// if not, add to list of sent before
+						await MarkPostAsSent(lastDbPost.id);
+						// add to list of send emails
+						console.log(lastDbPost.pubDate);
+						console.log(feed.createdAt);
+					}
+				}
 
 				// so we can be sure that email only contains the newest posts ( a "new" tag could also benefit from this)
 				const newPosts = findNewPosts(feeds);
