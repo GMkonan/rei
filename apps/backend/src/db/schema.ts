@@ -59,3 +59,5 @@ export const postsRelations = relations(posts, ({ one }) => ({
 }));
 
 export type SelectFeed = typeof feeds.$inferSelect;
+
+export type SelectPost = typeof posts.$inferSelect;

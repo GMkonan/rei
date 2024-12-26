@@ -10,6 +10,7 @@ import {
 	IsPostOnSentPosts,
 	MarkPostAsSent,
 } from "./handlers/posts";
+import sendEmail from "./utils/send-email";
 
 const app = new Elysia()
 	.use(cors())
@@ -65,9 +66,8 @@ const app = new Elysia()
 
 				// get list of feeds
 				const feeds = await GetFeedsWithNotifOn();
-				// traverse it to see if there are new items to any of them
-				// check for table with posts that have been sent before (and timestamp)
 
+				const postsToSend = [];
 				for (const feed of feeds) {
 					// fetch rss post
 
@@ -84,10 +84,16 @@ const app = new Elysia()
 						// if not, add to list of sent before
 						await MarkPostAsSent(lastDbPost.id);
 						// add to list of send emails
+
+						// maybe add info of author as well
+						postsToSend.push(lastDbPost);
 						console.log(lastDbPost.pubDate);
 						console.log(feed.createdAt);
 					}
 				}
+
+				//send emails
+				await sendEmail(postsToSend);
 			},
 		}),
 	)
