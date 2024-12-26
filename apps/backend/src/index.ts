@@ -60,7 +60,7 @@ const app = new Elysia()
 	.use(
 		cron({
 			name: "new_posts_mailer",
-			pattern: "* * * * *", // every day
+			pattern: "0 0 * * *", // every day
 			async run() {
 				console.log("Running");
 
