@@ -32,7 +32,7 @@ const app = new Elysia()
 	.use(
 		cron({
 			name: "update_posts",
-			pattern: "* */2 * * *", // every 2 hours
+			pattern: "0 */2 * * *", // every 2 hours
 			async run() {
 				console.log("Running fetcher cron");
 				// check if there are new posts on all feeds and update accordinly

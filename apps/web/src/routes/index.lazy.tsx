@@ -29,7 +29,7 @@ function Index() {
 
     setInput("");
   };
-
+  console.log("asdasd");
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl">Feeds page</h1>
@@ -41,6 +41,7 @@ function Index() {
             value={input}
             onInput={(e) => setInput((e.target as HTMLInputElement).value)}
           />
+          {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
           <button
             onClick={handleSubmit}
             className="p-1 bg-slate-500 rounded-sm text-white"
