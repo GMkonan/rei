@@ -1,3 +1,10 @@
 {
-	"extends": ["@rei/configs/biome"]
+	"extends": ["@rei/configs/biome"],
+	"linter": {
+		"rules": {
+			"a11y": {
+				"useButtonType": "off"
+			}
+		}
+	}
 }
