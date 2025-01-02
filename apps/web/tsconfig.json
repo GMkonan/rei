@@ -1,7 +1,5 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+	"extends": "@rei/configs/typescript/react-library.json",
+	"include": ["src", "**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
 }
