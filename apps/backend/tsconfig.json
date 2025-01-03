@@ -1,14 +1,35 @@
 {
-	"extends": "@rei/configs/typescript/base.json",
-	"include": ["src", "test"],
 	"compilerOptions": {
-		"module": "ESNext",
-		"noEmit": true,
-		"baseUrl": "",
-		"paths": {
-			"@server": ["src/index.ts"],
-			"@server/*": ["src/*"]
-		}
+		"target": "ES2022", // Modern JavaScript features
+		"module": "ESNext", // Use ES modules (Bun supports ESM natively)
+		"moduleResolution": "Bundler", // Recommended for Bun (or "NodeNext" if needed)
+		"allowJs": true, // Allow importing JavaScript files
+		"checkJs": true, // Type-check JavaScript files
+		"strict": true, // Enable all strict type-checking options
+		"esModuleInterop": true, // Enable ES module interoperability
+		"skipLibCheck": true, // Skip type-checking of declaration files (improves performance)
+		"forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+		"resolveJsonModule": true, // Allow importing JSON files
+		"isolatedModules": true, // Ensure each file can be transpiled independently (useful for Bun)
+
+		"jsx": "react-jsx",
+		"noUnusedLocals": true, // Report unused local variables
+		"noUnusedParameters": true, // Report unused function parameters
+		"noImplicitReturns": true, // Report missing return statements
+		"noFallthroughCasesInSwitch": true, // Report fallthrough cases in switch statements
+
+		"outDir": "./dist", // Output directory for compiled files
+		"rootDir": "./src", // Source directory for TypeScript files
+		"sourceMap": true, // Generate source maps for debugging
+		"inlineSources": true, // Include source content in source maps
+		"declaration": true, // Generate .d.ts declaration files
+		"declarationMap": true, // Generate source maps for declaration files
+
+		"allowSyntheticDefaultImports": true, // Allow synthetic default imports
+		"useDefineForClassFields": true, // Use modern class field semantics
+		"experimentalDecorators": true, // Enable experimental decorator support
+		"emitDecoratorMetadata": true // Emit metadata for decorators
 	},
+	"include": ["src/**/*", "type.d.ts"],
 	"exclude": ["node_modules", "dist"]
 }
