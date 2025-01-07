@@ -29,7 +29,6 @@ function Index() {
 
     setInput("");
   };
-  console.log("asdasd");
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl">Feeds page</h1>

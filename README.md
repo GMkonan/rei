@@ -5,3 +5,4 @@
 - biome ci setup
 - feed page
 - post page
+- test new posts email send

@@ -23,7 +23,7 @@ export const feeds = pgTable("feeds", {
 	link: varchar("link", { length: 255 }),
 	rss: varchar("rss", { length: 255 }).notNull(),
 	notifications: boolean("notifications"),
-	createdAt: date("createdAt").notNull().default("now()"),
+	createdAt: date("createdAt").notNull().defaultNow(),
 });
 
 export const feedsRelations = relations(feeds, ({ many }) => ({

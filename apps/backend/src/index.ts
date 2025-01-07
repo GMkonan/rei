@@ -31,7 +31,6 @@ const app = new Elysia()
 	)
 
 	.get("/feeds", async () => {
-		console.log("Running");
 		return await GetFeeds();
 	})
 	.use(
@@ -67,8 +66,6 @@ const app = new Elysia()
 			name: "new_posts_mailer",
 			pattern: "0 0 * * *", // every day
 			async run() {
-				console.log("Running");
-
 				// get list of feeds
 				const feeds = await GetFeedsWithNotifOn();
 
