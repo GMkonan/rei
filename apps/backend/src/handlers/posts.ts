@@ -16,14 +16,14 @@ export async function GetLastPost(feedId: number) {
 		.then((post) => post[0]);
 }
 
-export async function AddPosts(data: Feed) {
+export async function AddPosts(data: Feed, feedId: number) {
 	console.log(data);
 	const postsToAdd = data.items.map((item) => ({
 		title: item.title,
 		description: item.description,
 		link: item.link,
 		pubDate: item.pubDate,
-		feedId: data.feed.id,
+		feedId: feedId,
 	}));
 	const addedPosts = await db.insert(posts).values(postsToAdd);
 }

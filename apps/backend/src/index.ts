@@ -22,9 +22,9 @@ const app = new Elysia()
 			// should check first in db so we don't add the same feed twice
 
 			const data = await fetchRss(req.body.url);
-			AddFeed(data.feed);
+			const feed = await AddFeed(data.feed);
 			// Initial fetch of current posts to enter db
-			AddPosts(data);
+			AddPosts(data, feed.id);
 			return { status: "success", feed: data.feed };
 		},
 		{ body: t.Object({ url: t.String() }) },
@@ -55,7 +55,7 @@ const app = new Elysia()
 						new Date(lastDbPost.pubDate).getTime()
 					) {
 						// add to db
-						AddPosts(lastRssPost);
+						AddPosts(lastRssPost, feed.id);
 					}
 				}
 			},
@@ -66,9 +66,9 @@ const app = new Elysia()
 			name: "new_posts_mailer",
 			pattern: "0 0 * * *", // every day
 			async run() {
+				console.log("mailer");
 				// get list of feeds
 				const feeds = await GetFeedsWithNotifOn();
-
 				const postsToSend = [];
 				for (const feed of feeds) {
 					// fetch rss post
@@ -79,10 +79,11 @@ const app = new Elysia()
 					// check if post was published after the feed was added to the db
 					if (lastDbPost.pubDate > feed.createdAt) {
 						// check if it's on the list of sent before
-						if (await IsPostOnSentPosts(lastDbPost.id)) {
+
+						// this doesn't need to be array
+						if ((await IsPostOnSentPosts(lastDbPost.id)).length > 0) {
 							return;
 						}
-
 						// if not, add to list of sent before
 						await MarkPostAsSent(lastDbPost.id);
 						// add to list of send emails

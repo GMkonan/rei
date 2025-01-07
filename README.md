@@ -6,3 +6,4 @@
 - feed page
 - post page
 - test new posts email send
+- search more about rss (only descriptions or you can get whole posts?)
