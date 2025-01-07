@@ -38,6 +38,8 @@ export const posts = pgTable("posts", {
 	author: varchar("author", { length: 255 }),
 	pubDate: date("pubDate").notNull(),
 	createdAt: date("createdAt").notNull().default("now()"),
+	link: varchar("link", { length: 255 }),
+	originalLink: varchar("originalLink", { length: 255 }),
 	content: text("content"),
 });
 

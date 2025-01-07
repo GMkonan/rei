@@ -24,6 +24,7 @@ export async function AddPosts(data: Feed, feedId: number) {
 		link: item.link,
 		pubDate: item.pubDate,
 		feedId: feedId,
+		originalLink: `feed/${feedId}`,
 	}));
 	const addedPosts = await db.insert(posts).values(postsToAdd);
 }
