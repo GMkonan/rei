@@ -2,6 +2,9 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { client } from "../services/api";
 import { useQuery } from "@tanstack/react-query";
+import { Separator } from "@/components/ui/separator";
+import { Toggle } from "@/components/ui/toggle";
+import { Bell } from "lucide-react";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
@@ -31,7 +34,7 @@ function Index() {
   };
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-2xl">Feeds page</h1>
+      <h1 className="text-2xl">Feeds</h1>
       <div className="mt-4">
         <form>
           <input
@@ -43,7 +46,7 @@ function Index() {
           {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
           <button
             onClick={handleSubmit}
-            className="p-1 bg-slate-500 rounded-sm text-white"
+            className="p-1 bg-primary text-secondary rounded-sm"
           >
             Add feed
           </button>
@@ -51,13 +54,23 @@ function Index() {
       </div>
       <div className="mt-4">
         {feedData?.map((feed) => (
-          <div
-            className="flex flex-col border border-black p-4 items-start"
-            key={feed.title}
-          >
-            <h2 className="text-xl font-bold">{feed.title}</h2>
-            <p>{feed.description}</p>
-          </div>
+          <>
+            <div
+              className="flex items-center justify-between p-1 w-96"
+              key={feed.id}
+            >
+              <a href={`feed/${feed.id}`} className="flex flex-col">
+                <h2 className="text-md">{feed.title}</h2>
+                <p className="text-sm">{feed.description}</p>
+              </a>
+              <div className="">
+                <Toggle aria-label="Toggle notifications">
+                  <Bell />
+                </Toggle>
+              </div>
+            </div>
+            <Separator key={feed.id} />
+          </>
         ))}
       </div>
     </div>

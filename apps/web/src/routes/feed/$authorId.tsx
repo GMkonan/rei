@@ -12,7 +12,7 @@ function RouteComponent() {
     <div>
       <h1>Posts by author {authorId}</h1>
       <span>URL to the original website</span>
-      <div className="flex flex-col bg-slate-300">
+      <div className="flex flex-col">
         <h2>Name of the post</h2>
         <p>Small description of the post</p>
         <div>
